@@ -95,7 +95,7 @@ onMount(async () => {
   blueMarkers.setZIndex(1);
   aquaMarkers.setZIndex(0);
 
-  let data = await fetch("https://deprem-api.vercel.app/?type=afad")
+  let data = await fetch("https://deprem-api.vercel.app/")
     .then((res) => res.json())
     .then((res) => res.earthquakes);
   data = data.map((item) => {
