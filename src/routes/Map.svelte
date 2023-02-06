@@ -87,30 +87,37 @@ onMount(async () => {
   map.addLayer(yellowMarkers);
   map.addLayer(aquaMarkers);
 
-  let data = await fetch("https://deprem-api.vercel.app/")
+  let data = await fetch("https://deprem-api.vercel.app")
     .then((res) => res.json())
     .then((res) => res.earthquakes);
-
-  const getHighestEarthquake = data.find((item) => item.size.ml >= 7);
+  data = data.map((item) => {
+    item.attribute = item.size.ml ? "ml" : item.size.md ? "md" : "mw";
+    return item;
+  });
+  const getHighestEarthquake = data.sort(
+    (a, b) =>
+      b.size[b.attribute.toLowerCase()] - a.size[a.attribute.toLowerCase()]
+  )[0];
   const location = [
     getHighestEarthquake.longitude - 0.1,
     getHighestEarthquake.latitude - 0.5,
   ];
   map.getView().setCenter(fromLonLat(location));
 
-  data = data.filter((item) => item.size.ml >= 2);
+  data = data.filter((item) => item.size[item.attribute.toLowerCase()] >= 2);
 
   data.forEach((item) => {
     let marker = new Feature(
       new Point(fromLonLat([item.longitude, item.latitude]))
     );
-    if (item.size.ml >= 7) {
+    const size = item.size[item.attribute.toLowerCase()];
+    if (size >= 7) {
       redAndHighMarkers.getSource().addFeature(marker);
-    } else if (item.size.ml >= 5) {
+    } else if (size >= 5) {
       redMarkers.getSource().addFeature(marker);
-    } else if (item.size.ml >= 4) {
+    } else if (size >= 4) {
       yellowMarkers.getSource().addFeature(marker);
-    } else if (item.size.ml >= 3) {
+    } else if (size >= 3) {
       blueMarkers.getSource().addFeature(marker);
     } else {
       aquaMarkers.getSource().addFeature(marker);
