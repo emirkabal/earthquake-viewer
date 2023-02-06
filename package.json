@@ -6,14 +6,21 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "prettier --write ."
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.2",
     "moment": "^2.29.4",
+    "prettier": "^2.8.3",
+    "prettier-plugin-svelte": "^2.9.0",
     "sass": "^1.55.0",
     "svelte": "^3.49.0",
     "svelte-preprocess": "^4.10.7",
     "vite": "^3.1.0"
+  },
+  "dependencies": {
+    "ol": "^7.2.2",
+    "svelte-routing": "^1.6.0"
   }
 }
