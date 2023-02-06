@@ -7,7 +7,6 @@ export default defineConfig({
   plugins: [
     svelte({
       preprocess: sveltePreprocess(),
-      dev: !process.env.NODE_ENV !== "production",
     }),
   ],
 });
