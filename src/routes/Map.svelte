@@ -28,31 +28,21 @@ onMount(async () => {
     style: new Style({
       image: new Icon({
         anchor: [0.5, 1],
-        scale: 0.7,
+        scale: 0.8,
         opacity: 0.8,
         src: "markers/red.png",
       }),
     }),
   });
+
   const redMarkers = new Vector({
     source: new VectorSource(),
     style: new Style({
       image: new Icon({
         anchor: [0.5, 1],
-        scale: 0.4,
-        opacity: 0.7,
+        scale: 0.5,
+        opacity: 0.6,
         src: "markers/red.png",
-      }),
-    }),
-  });
-  const blueMarkers = new Vector({
-    source: new VectorSource(),
-    style: new Style({
-      image: new Icon({
-        anchor: [0.5, 1],
-        scale: 0.3,
-        opacity: 0.4,
-        src: "markers/blue.png",
       }),
     }),
   });
@@ -63,8 +53,20 @@ onMount(async () => {
       image: new Icon({
         anchor: [0.5, 1],
         scale: 0.3,
-        opacity: 0.2,
+        opacity: 0.5,
         src: "markers/yellow.png",
+      }),
+    }),
+  });
+
+  const blueMarkers = new Vector({
+    source: new VectorSource(),
+    style: new Style({
+      image: new Icon({
+        anchor: [0.5, 1],
+        scale: 0.3,
+        opacity: 0.3,
+        src: "markers/blue.png",
       }),
     }),
   });
@@ -83,25 +85,43 @@ onMount(async () => {
 
   map.addLayer(redAndHighMarkers);
   map.addLayer(redMarkers);
-  map.addLayer(blueMarkers);
   map.addLayer(yellowMarkers);
+  map.addLayer(blueMarkers);
   map.addLayer(aquaMarkers);
 
-  let data = await fetch("https://deprem-api.vercel.app")
+  redAndHighMarkers.setZIndex(4);
+  redMarkers.setZIndex(3);
+  yellowMarkers.setZIndex(2);
+  blueMarkers.setZIndex(1);
+  aquaMarkers.setZIndex(0);
+
+  let data = await fetch("https://deprem-api.vercel.app/?type=afad")
     .then((res) => res.json())
     .then((res) => res.earthquakes);
   data = data.map((item) => {
     item.attribute = item.size.ml ? "ml" : item.size.md ? "md" : "mw";
     return item;
   });
-  const getHighestEarthquake = data.sort(
-    (a, b) =>
-      b.size[b.attribute.toLowerCase()] - a.size[a.attribute.toLowerCase()]
-  )[0];
-  const location = [
-    getHighestEarthquake.longitude - 0.1,
-    getHighestEarthquake.latitude - 0.5,
-  ];
+
+  const getHighestEarthquakesLocation = data
+    .sort(
+      (a, b) =>
+        b.size[b.attribute.toLowerCase()] - a.size[a.attribute.toLowerCase()]
+    )
+    .slice(0, 10);
+
+  const getAverageLocation = getHighestEarthquakesLocation.reduce(
+    (acc, item) => {
+      acc[0] += item.longitude;
+      acc[1] += item.latitude;
+      return acc;
+    },
+    [0, 0]
+  );
+  getAverageLocation[0] /= getHighestEarthquakesLocation.length;
+  getAverageLocation[1] /= getHighestEarthquakesLocation.length;
+
+  const location = [getAverageLocation[0], getAverageLocation[1]];
   map.getView().setCenter(fromLonLat(location));
 
   data = data.filter((item) => item.size[item.attribute.toLowerCase()] >= 2);
