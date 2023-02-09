@@ -61,7 +61,20 @@ const searchEarthquakes = () => {
   </header>
   <div class="container">
     {#if loading}
-      <span>Loading...</span>
+      <div class="lds-spinner">
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+      </div>
     {:else}
       <div class="earthquakes">
         {#if search.trim().length > 0}
@@ -98,19 +111,14 @@ const searchEarthquakes = () => {
       {/if}
     {/if}
   </div>
-  <div
-    style="display: flex; flex-direction:column; justify-content:center; margin: auto; width:100%;"
-  >
+  <div class="footer">
     <a
       href="https://github.com/emirkabal/earthquake-viewer"
-      style="opacity: .7; color:#fff; text-align: center; display: block; margin-bottom: 4px;"
+      class="footer-link"
     >
-      Github
+      Github Repo
     </a>
-    <a
-      href="http://www.koeri.boun.edu.tr/scripts/lst9.asp"
-      style="opacity: .7; color:#fff; text-align: center; display: block; margin-bottom: 10px;"
-    >
+    <a href="http://www.koeri.boun.edu.tr/scripts/lst9.asp" class="footer-link">
       All earthquakes in this site are taken from Kandilli Observatory.
     </a>
   </div>
