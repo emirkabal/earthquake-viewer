@@ -8,6 +8,7 @@ import { Icon, Style } from "ol/style";
 import { Point } from "ol/geom";
 import { onMount } from "svelte";
 import TileJSON from "ol/source/TileJSON";
+import Spinner from "../lib/Spinner.svelte";
 let loaded = false;
 
 onMount(async () => {
@@ -125,8 +126,7 @@ onMount(async () => {
       (a, b) =>
         b.size[b.attribute.toLowerCase()] - a.size[a.attribute.toLowerCase()]
     )
-    .slice(0, 2);
-
+    .slice(0, 10);
   const getAverageLocation = getHighestEarthquakesLocation.reduce(
     (acc, item) => {
       acc[0] += item.longitude;
@@ -138,10 +138,7 @@ onMount(async () => {
   getAverageLocation[0] /= getHighestEarthquakesLocation.length;
   getAverageLocation[1] /= getHighestEarthquakesLocation.length;
 
-  const location = [
-    getAverageLocation[0] - (0.098 * getAverageLocation[0]) / 5,
-    getAverageLocation[1] - 0.4,
-  ];
+  const location = [getAverageLocation[0], getAverageLocation[1]];
   map.getView().setCenter(fromLonLat(location));
 
   data = data.filter((item) => item.size[item.attribute.toLowerCase()] >= 2);
@@ -174,20 +171,7 @@ onMount(async () => {
     <div id="loaded" />
   {:else}
     <div id="loading">
-      <div class="lds-spinner">
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-      </div>
+      <Spinner />
     </div>
   {/if}
 </main>

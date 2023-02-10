@@ -2,6 +2,7 @@
 import { grabLocation } from "../functions/grabLocation";
 import Pagination from "../lib/Pagination.svelte";
 import EarthquakeView from "../lib/EarthquakeView.svelte";
+import Spinner from "../lib/Spinner.svelte";
 let [earthquakes, filtered, pages, loading, search] = [
   [],
   [],
@@ -61,20 +62,7 @@ const searchEarthquakes = () => {
   </header>
   <div class="container">
     {#if loading}
-      <div class="lds-spinner">
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-      </div>
+      <Spinner />
     {:else}
       <div class="earthquakes">
         {#if search.trim().length > 0}
