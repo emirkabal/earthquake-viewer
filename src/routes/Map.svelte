@@ -138,7 +138,10 @@ onMount(async () => {
   getAverageLocation[0] /= getHighestEarthquakesLocation.length;
   getAverageLocation[1] /= getHighestEarthquakesLocation.length;
 
-  const location = [getAverageLocation[0] - 1.2, getAverageLocation[1] - 0.1];
+  const location = [
+    getAverageLocation[0] - (0.098 * getAverageLocation[0]) / 5,
+    getAverageLocation[1] - 0.4,
+  ];
   map.getView().setCenter(fromLonLat(location));
 
   data = data.filter((item) => item.size[item.attribute.toLowerCase()] >= 2);
