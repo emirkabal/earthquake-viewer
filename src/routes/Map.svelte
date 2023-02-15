@@ -1,32 +1,32 @@
 <script>
 import { Map, View, Feature } from "ol";
-import Tile from "ol/layer/Tile";
 import { fromLonLat } from "ol/proj";
 import Vector from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Icon, Style } from "ol/style";
 import { Point } from "ol/geom";
+import MapboxVector from "ol/layer/MapboxVector";
 import { onMount } from "svelte";
-import TileJSON from "ol/source/TileJSON";
 import Spinner from "../lib/Spinner.svelte";
 let loaded = false;
 
 onMount(async () => {
-  const source = new TileJSON({
-    url: "https://api.maptiler.com/maps/basic-v2-dark/tiles.json?key=oVXfyiogVe6OCHjfhNj9",
-    tileSize: 512,
-    crossOrigin: "anonymous",
-  });
   const map = new Map({
     target: "map",
+    pixelRatio: 1,
+
     layers: [
-      new Tile({
-        source,
+      new MapboxVector({
+        styleUrl: "mapbox://styles/mapbox/dark-v11",
+        // change lang to fr
+        accessToken:
+          "pk.eyJ1IjoiZW1pcmthYmFsIiwiYSI6ImNsZHhjbGlpcDA0cXUzbm1rYnlud2p0MHcifQ.F7mPKDkJ8mFcFV2lHrsdkQ",
       }),
     ],
     view: new View({
       center: [0, 0],
       zoom: 9,
+      constrainResolution: true,
     }),
   });
   // @ts-ignore
