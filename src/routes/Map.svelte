@@ -24,8 +24,8 @@ onMount(async () => {
       }),
     ],
     view: new View({
-      center: [0, 0],
-      zoom: 9,
+      center: [23.99, 39],
+      zoom: 8.4,
       constrainResolution: true,
     }),
   });
@@ -126,7 +126,7 @@ onMount(async () => {
       (a, b) =>
         b.size[b.attribute.toLowerCase()] - a.size[a.attribute.toLowerCase()]
     )
-    .slice(0, 10);
+    .slice(0, 2);
   const getAverageLocation = getHighestEarthquakesLocation.reduce(
     (acc, item) => {
       acc[0] += item.longitude;
