@@ -5,41 +5,33 @@ import Vector from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Icon, Style } from "ol/style";
 import { Point } from "ol/geom";
-import MapboxVector from "ol/layer/MapboxVector";
 import { onMount } from "svelte";
 import Spinner from "../lib/Spinner.svelte";
 let loaded = false;
 
 onMount(async () => {
+  // @ts-ignore
+  var client = new atlas.Client({
+    apiKey: "AlkVjf0YFkkDuvu58l7Ndc1oiHk71IbF",
+    // @ts-ignore
+    mapType: atlas.MAPTYPES.OPENLAYERS,
+  });
+  // @ts-ignore
+  var layers = client.createLayer(atlas.BASEMAPS.GECE);
+  console.log(layers);
+
   const map = new Map({
     target: "map",
     pixelRatio: 1,
 
-    layers: [
-      new MapboxVector({
-        styleUrl: "mapbox://styles/mapbox/dark-v11",
-        // change lang to fr
-        accessToken:
-          "pk.eyJ1IjoiZW1pcmthYmFsIiwiYSI6ImNsZHhjbGlpcDA0cXUzbm1rYnlud2p0MHcifQ.F7mPKDkJ8mFcFV2lHrsdkQ",
-      }),
-    ],
+    layers,
     view: new View({
-      center: [0, 0],
-      zoom: 9,
+      center: fromLonLat([33.41, 39]),
+      zoom: 8.6,
       constrainResolution: true,
     }),
   });
-  // @ts-ignore
-  document
-    .querySelector(
-      "#map > div > div.ol-overlaycontainer-stopevent > div.ol-attribution.ol-unselectable.ol-control.ol-collapsed"
-    )
-    .classList.remove("ol-collapsed");
-  document
-    .querySelector(
-      "#map > div > div.ol-overlaycontainer-stopevent > div.ol-attribution.ol-unselectable.ol-control > button"
-    )
-    .remove();
+
   const redAndHighMarkers = new Vector({
     source: new VectorSource(),
     style: new Style({
@@ -112,7 +104,7 @@ onMount(async () => {
   blueMarkers.setZIndex(1);
   aquaMarkers.setZIndex(0);
 
-  let data = await fetch("https://deprem-api.vercel.app/")
+  let data = await fetch("https://deprem-api.vercel.app/?type=afad")
     .then((res) => res.json())
     .then((res) => res.earthquakes);
 
@@ -126,7 +118,7 @@ onMount(async () => {
       (a, b) =>
         b.size[b.attribute.toLowerCase()] - a.size[a.attribute.toLowerCase()]
     )
-    .slice(0, 10);
+    .slice(0, 2);
   const getAverageLocation = getHighestEarthquakesLocation.reduce(
     (acc, item) => {
       acc[0] += item.longitude;
