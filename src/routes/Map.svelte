@@ -5,9 +5,10 @@ import Vector from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Icon, Style } from "ol/style";
 import { Point } from "ol/geom";
-import MapboxVector from "ol/layer/MapboxVector";
 import { onMount } from "svelte";
 import Spinner from "../lib/Spinner.svelte";
+import OSM from "ol/source/OSM";
+import TileLayer from "ol/layer/Tile";
 let loaded = false;
 
 onMount(async () => {
@@ -16,11 +17,8 @@ onMount(async () => {
     pixelRatio: 1,
 
     layers: [
-      new MapboxVector({
-        styleUrl: "mapbox://styles/mapbox/dark-v11",
-        // change lang to fr
-        accessToken:
-          "pk.eyJ1IjoiZW1pcmthYmFsIiwiYSI6ImNsZHhjbGlpcDA0cXUzbm1rYnlud2p0MHcifQ.F7mPKDkJ8mFcFV2lHrsdkQ",
+      new TileLayer({
+        source: new OSM(),
       }),
     ],
     view: new View({
